@@ -22,10 +22,10 @@ import os
 
 import numpy as np
 from matplotlib import pyplot as plt
-from tudatpy import constants, numerical_simulation
+from tudatpy import constants
 from tudatpy.data import save2txt
 from tudatpy.interface import spice
-from tudatpy.numerical_simulation import environment_setup, propagation_setup
+from tudatpy.dynamics import environment_setup, propagation_setup, simulator
 
 # Retrieve current directory
 current_directory = os.getcwd()
@@ -133,7 +133,7 @@ propagator_settings.print_settings.print_initial_and_final_conditions = True
 ###########################################################################
 
 # Create simulation object and propagate dynamics.
-dynamics_simulator = numerical_simulation.create_dynamics_simulator(
+dynamics_simulator = simulator.create_dynamics_simulator(
     bodies, propagator_settings
 )
 
