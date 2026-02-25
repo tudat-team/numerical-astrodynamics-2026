@@ -18,10 +18,12 @@ spice.load_standard_kernels()
 output_directory = "./SimulationOutput/"
 
 ###########################################################################
-# RUN CODE FOR QUESTION 5 #################################################
+# RUN CODE FOR QUESTION 4 #################################################
 ###########################################################################
 
 if __name__ == "__main__":
+
+    rsw_acceleration_magnitude = [0, 0, 0]
 
     # Create body objects
     bodies = create_simulation_bodies()
@@ -31,76 +33,32 @@ if __name__ == "__main__":
         bodies, target_body, departure_epoch, arrival_epoch
     )
 
-    # Set arc length
-    number_of_arcs = 10
-    arc_length = XXXX
+    ###########################################################################
+    # RUN CODE FOR QUESTION 4b ################################################
+    ###########################################################################
 
-    for arc_index in range(number_of_arcs):
+    # Set start and end times of full trajectory
+    departure_epoch_with_buffer = XXXX
+    arrival_epoch_with_buffer = XXXX
 
-        # Compute start and end time for current arc
-        current_arc_initial_time = XXXX
-        current_arc_final_time = XXXX
+    # Solve for state transition matrix on current arc
+    termination_settings = propagation_setup.propagator.time_termination(
+        arrival_epoch_with_buffer 
+    )
+    variational_equations_solver = propagate_variational_equations(
+        departure_epoch_with_buffer,
+        termination_settings,
+        bodies,
+        lambert_arc_ephemeris,
+        use_rsw_acceleration = True)
 
-        # Get propagator settings for perturbed forward arc
-        arc_initial_state = lambert_arc_ephemeris.cartesian_state(
-            current_arc_initial_time
-        )
+    sensitivity_matrix_history = variational_equations_solver.sensitivity_matrix_history
+    state_history = variational_equations_solver.state_history
+    lambert_history = get_lambert_arc_history(lambert_arc_ephemeris, state_history)
 
-        termination_settings = propagation_setup.propagator.time_termination(
-            current_arc_final_time
-        )
+    # Compute low-thrust RSW acceleration to meet required final position
+    rsw_acceleration_magnitude = XXXX
 
-        propagator_settings = get_perturbed_propagator_settings(
-            bodies, arc_initial_state, current_arc_initial_time, termination_settings
-        )
-
-        ###########################################################################
-        # PROPAGATE NOMINAL TRAJECTORY AND VARIATIONAL EQUATIONS ##################
-        ###########################################################################
-
-        sensitivity_parameters = get_sensitivity_parameter_set(
-            propagator_settings, bodies
-        )
-        variational_equations_simulator = (
-            numerical_simulation.create_variational_equations_solver(
-                bodies, propagator_settings, sensitivity_parameters
-            )
-        )
-
-        state_transition_result = (
-            variational_equations_simulator.state_transition_matrix_history
-        )
-        nominal_integration_result = variational_equations_simulator.state_history
-
-        # Computer arc initial state before applying variations
-        initial_epoch = list(state_transition_result.keys())[0]
-        original_initial_state = nominal_integration_result[initial_epoch]
-
-        ###########################################################################
-        # START ANALYSIS ALGORITHM FOR QUESTION 4 #################################
-        ###########################################################################
-
-        # This vector will hold the maximum permitted initial state perturbations for which the linearization
-        # is valid (for the current arc. The vector is initialized to 0, and each of its 6 entries is computed
-        # in the 6 iterations of the coming for loop (that runs over the iteration variable 'entry')
-        permitted_perturbations = np.array([0, 0, 0, 0, 0, 0])
-
-        # Iterate over all initial state entries
-        for entry in range(6):
-
-            # Define (iterative) algorithm to compute current entry of 'permitted_perturbations'
-            # General structure: define an initial state perturbation (perturbed_initial_state variable),
-            # compute epsilon_x (see assignment), and iterate your algorithm until convergence.
-
-            while XXXX:
-
-                # Reset propagator settings with perturbed initial state
-                perturbed_initial_state = XXXX
-                propagator_settings.initial_states = perturbed_initial_state
-
-                XXXX
-
-                # Compute epsilon_x
-                epsilon_x = XXXX
-
-            permitted_perturbations[entry] = XXXX
+    # Propagate dynamics with RSW acceleration. NOTE: use the rsw_acceleration_magnitude as
+    # input to the propagate_trajectory function
+    dynamics_simulator = XXXX
