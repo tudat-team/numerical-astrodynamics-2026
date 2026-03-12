@@ -10,16 +10,12 @@ http://tudat.tudelft.nl/LICENSE.
 """
 
 import numpy as np
-from tudatpy import constants, numerical_simulation
+from tudatpy import constants
 from tudatpy.astro import element_conversion, two_body_dynamics
+from tudatpy.dynamics import environment_setup, environment, propagation_setup, simulator
 from tudatpy.data import save2txt
 from tudatpy.interface import spice
 from tudatpy.math import interpolators
-from tudatpy.numerical_simulation import (
-    environment,
-    environment_setup,
-    propagation_setup,
-)
 
 # Define departure/arrival epoch - in seconds since J2000
 flyby_initial_time = ...
@@ -162,7 +158,7 @@ def get_difference_wrt_benchmarks(
 
 
 def write_propagation_results_and_analytical_difference_to_file(
-    dynamics_simulator: numerical_simulation.SingleArcSimulator,
+    dynamics_simulator: simulator.SingleArcSimulator,
     file_output_identifier: str,
     central_body_gravitational_parameter: float,
 ):
@@ -237,7 +233,7 @@ def write_propagation_results_and_analytical_difference_to_file(
 
 
 def write_propagation_results_and_benchmark_difference_to_file(
-    dynamics_simulator: numerical_simulation.SingleArcSimulator,
+    dynamics_simulator: simulator.SingleArcSimulator,
     file_output_identifier: str,
     benchmark_interpolator: interpolators.OneDimensionalInterpolatorVector,
 ):
@@ -301,7 +297,7 @@ def write_propagation_results_and_benchmark_difference_to_file(
 
 
 def write_propagation_results_to_file(
-    dynamics_simulator: numerical_simulation.SingleArcSimulator,
+    dynamics_simulator: simulator.SingleArcSimulator,
     file_output_identifier: str,
 ):
     """
