@@ -47,9 +47,6 @@ for current_phase in range(len(central_bodies_per_phase)):
     benchmark_integrator_settings = ...
 
     # Create integrator settings
-    step_size_control_settings = (
-        propagation_setup.integrator.step_size_control_elementwise_scalar_tolerance(...)
-    )
     step_size_validation_settings = propagation_setup.integrator.step_size_validation(
         ...
     )
@@ -80,6 +77,11 @@ for current_phase in range(len(central_bodies_per_phase)):
 
         # Retrieve coefficient set
         coefficient_set = ...
+
+        # Create integrator settings
+        step_size_control_settings = (
+            propagation_setup.integrator.step_size_control_elementwise_scalar_tolerance(...)
+        )
 
         # Create variable step-size integrator settings
         integrator_settings = ...
